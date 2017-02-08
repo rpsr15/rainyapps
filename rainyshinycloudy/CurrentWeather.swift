@@ -63,20 +63,20 @@ class CurrentWeather {
         return _currentTemp
     }
     
-    func downloadWeatherDetails(completed: DownloadComplete) {
+    func downloadWeatherDetails(completed:@escaping  DownloadComplete) {
         
         //Alamofire download
         
-        if let currentWeatherURL = URL(string: CURRENT_WEATHER_URL) {
-        
-        Alamofire.request(currentWeatherURL).responseJSON { response in
-            
-            let result = response.result
-            
-            print(result)
-            
+        if let currentWeatherURL = URL(string: "http://api.openweathermap.org/data/2.5/weather?lat=37.7873589&lon=-122.408227&appid=39bf8746a93259509d92ce20d03c1b84") {
+         Alamofire.request(currentWeatherURL).responseJSON(completionHandler: { (response) in
+            let result = response.data
+            if let jsonData = try? JSONSerialization.jsonObject(with: result!, options: []) as? [String : Any]{
+                print(jsonData)
+                completed()
             }
-            completed()
+         
+         })
+
         }
     }
 }
